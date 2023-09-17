@@ -20,10 +20,16 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       });
+      this.belongsTo(models.Quizz, {
+        foreignKey: 'quiz_id',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      });
     }
   }
   ResponseUserAnswer.init({
     user_id: DataTypes.INTEGER,
+    quiz_id: DataTypes.INTEGER,
     question_id: DataTypes.INTEGER,
     user_answer: DataTypes.STRING,
     is_corect: DataTypes.INTEGER

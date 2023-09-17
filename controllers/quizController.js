@@ -1,4 +1,4 @@
-const { Quizz, User, Question, Answer } = require('../models');
+const { Quizz, User, Question, Answer, ResponseUserAnswer } = require('../models');
 
 class QuizController {
     static async createQuiz(req, res) {
@@ -58,7 +58,7 @@ class QuizController {
             const { quizId } = req.params
             const response = await Quizz.findOne({
                 where: { id: quizId },
-                include: [{ model: Question, include: [Answer], }],
+                include: [{ model: Question, include: [{model: Answer, model: ResponseUserAnswer}], }],
             });
             if (response) {
                 res.status(200).json({ message: 'detail quizz', data: response })
