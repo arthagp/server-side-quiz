@@ -81,10 +81,11 @@ class UserResponseController {
 
       // Menyimpan nilai total_score ke dalam tabel ScoreBoard
       const scoreCalculate = score / totalQuestions * 100
+      const pembulatanScore = Math.ceil(scoreCalculate)
       const scoreboardEntry = await ScoreBoard.create({
         user_id: id,
         quiz_id: quizId,
-        score: scoreCalculate,
+        score: pembulatanScore,
       });
 
       res.status(200).json({ message: 'Quiz score calculated', data: scoreboardEntry.score });
