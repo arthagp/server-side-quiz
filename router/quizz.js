@@ -8,6 +8,7 @@ router.get('/all-quiz', QuizController.getAllQuiz)
 router.put('/edit-quiz/:quizId', authentication, QuizController.editQuizById)
 router.post('/add-question/:quizId', authentication, QuizController.addQuestion)
 router.get('/get-detail/:quizId', authentication, QuizController.detailQuizz)
+router.get('/my-quizz', authentication, QuizController.getAllQuizByUserId)
 router.post('/questions/:questionId/answers', authentication, QuizController.addAnswer)
 
 module.exports = router;

@@ -53,29 +53,48 @@ class QuizController {
         }
     }
 
+    static async getAllQuizByUserId(req, res) {
+        try {
+            const { id } = req.userLogged
+            const response = await Quizz.findAll({ where: { user_id: id } })
+            if (response) {
+                res.status(200).json({ message: 'Found', data: response })
+            } else {
+                res.status(404).json({ message: 'Not Found' })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     static async detailQuizz(req, res) {
         try {
-          const { quizId } = req.params;
-          const response = await Quizz.findOne({
-            where: { id: quizId },
-            include: [
-              {
-                model: Question,
-                order: [["id", "ASC"]], // Mengurutkan pertanyaan berdasarkan ID secara ascending
-              },
-            ],
-          });
-          if (response) {
-            res.status(200).json({ message: 'detail quizz', data: response });
-          } else {
-            res.status(404).json({ message: 'Not Found' });
-          }
+            const { quizId } = req.params;
+            const response = await Quizz.findOne({
+                where: { id: quizId },
+                include: [
+                    {
+                        model: Question,
+                        order: [["id", "ASC"]],
+                        include: [
+                            {
+                                model: Answer,
+                                order: [["id", "ASC"]]
+                            }
+                        ]
+                    },
+                ],
+            });
+            if (response) {
+                res.status(200).json({ message: 'detail quizz', data: response });
+            } else {
+                res.status(404).json({ message: 'Not Found' });
+            }
         } catch (error) {
-          console.log(error);
-          res.status(500).json({ message: 'Internal Server Error' });
+            console.log(error);
+            res.status(500).json({ message: 'Internal Server Error' });
         }
-      }
-      
+    }
 
     static async editQuizById(req, res) {
         try {
