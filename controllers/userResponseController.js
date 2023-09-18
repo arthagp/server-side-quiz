@@ -95,7 +95,53 @@ class UserResponseController {
     }
   }
 
+  static async deleteUserResponseAnswer(req, res) {
+    try {
+      const { id } = req.userLogged;
+      const { quizId } = req.params;
+      const response = await ResponseUserAnswer.destroy({
+        where: { user_id: id, quiz_id: quizId }
+      })
+      if (response) {
+        res.status(200).json({ message: 'Delete User Response succes' })
+      } 
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
+  static async deleteScoreBoard(req, res) {
+    try {
+      const { id } = req.userLogged;
+      const { quizId } = req.params;
+      const response = await ScoreBoard.destroy({
+        where: { user_id: id, quiz_id: quizId }
+      })
+      if (response) {
+        res.status(200).json({ message: 'Delete Score succes' })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  static async getAlreadyScoreBoard(req, res) {
+    try {
+      const { id } = req.userLogged;
+      const { quizId } = req.params;
+      console.log(quizId, id, '<><><><><<')
+      const data = await ScoreBoard.findOne({ where: { user_id: id, quiz_id: quizId } })
+      if (data) {
+        res.status(200).json({ message: 'Found', data })
+      } else {
+        res.status(400).json({ message: 'Not Found' })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
 }
 
 module.exports = UserResponseController
