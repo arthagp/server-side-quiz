@@ -115,8 +115,18 @@ class QuizController {
         }
     }
 
-    // deleteQuizz not yet
-    // <<<<<
+    static async deleteQuizById(req, res) {
+        try {
+            const { quizId } = req.params;
+            const response = await Quizz.destroy({ where: { id: quizId } })
+            if (response) {
+                res.status(200).json({ message: 'Delete Quizz Succesfull' })
+            }
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ error: 'Failed to delete quiz' });
+        }
+    }
 
     static async addQuestion(req, res) {
         try {
@@ -135,9 +145,21 @@ class QuizController {
         }
     }
 
-    //edit question, not yet
-    // >>>>>
-    //
+    static async editQuestion(req, res) {
+        try {
+            const { questionId } = req.params
+            const { questionText } = req.body
+            const response = await Question.update({ questions_text: questionText }, { where: { id: questionId } });
+            if (response) {
+                res.status(201).json({ message: 'succes edit question' })
+            }
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ error: 'Gagal mengedit Question.' });
+        }
+    }
+
+    // delete question not yet
 
     static async addAnswer(req, res) {
         try {
@@ -147,8 +169,13 @@ class QuizController {
             if (!question) {
                 res.status(404).json({ error: 'Pertanyaan tidak ditemukan.' });
             } else {
-                const answer = await Answer.create({ answer_text: answerText, question_id: questionId });
-                res.status(201).json({ message: 'add answer succes', data: answer });
+                const findOneAnswer = await Answer.findOne({ where: { question_id: questionId } })
+                if (!findOneAnswer) {
+                    const answer = await Answer.create({ answer_text: answerText, question_id: questionId });
+                    res.status(201).json({ message: 'add answer succes', data: answer });
+                } else {
+                    res.status(404).json({ message: 'One Question One Answer, Please!' })
+                }
             }
         } catch (error) {
             console.error(error);
@@ -156,10 +183,21 @@ class QuizController {
         }
     }
 
+    static async editAnswer(req, res) {
+        try {
+            const { answerId } = req.params
+            const { answerText } = req.body
+            const response = await Answer.update({ answer_text: answerText }, { where: { id: answerId } })
+            if (response) {
+                res.status(201).json({ message: 'succes edit answer' })
+            }
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ error: 'failed to edit answer' })
+        }
+    }
 
-    //edit asnwer, not yet
-    // >>>>>
-    //
+    // delete answer not yet
 
 }
 
