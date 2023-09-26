@@ -4,6 +4,7 @@ class UserResponseController {
   // ketika sudah selesai semua kamu coba cek melalui calculate dengan Quizz > Question > User Response = setelah itu simpan score di scoreBoard, coba dulu seperti ini.
 
   static async userResponseAnswer(req, res) {
+    // alasan mengapa di butuhkan quiz_id di dalam tabel Response_user_answer >>
     try {
       const { id } = req.userLogged;
       const { questionId } = req.params;
@@ -11,7 +12,7 @@ class UserResponseController {
 
       const findQuestion = await Question.findOne({
         where: { id: questionId },
-        include: [Answer], // Pastikan Anda memuat model Answer
+        include: [Answer],
       });
 
       // res.json({findQuestion})
@@ -75,6 +76,8 @@ class UserResponseController {
         }
       });
 
+      console.log(score, 'scoreeee:')
+
       // Menghitung jumlah pertanyaan dalam kuis tertentu
       const totalQuestions = await Question.count({ where: { quiz_id: quizId } });
 
@@ -130,7 +133,7 @@ class UserResponseController {
     try {
       const { id } = req.userLogged;
       const { quizId } = req.params;
-      console.log(quizId, id, '<><><><><<')
+      // console.log(quizId, id, '<><><><><<')
       const data = await ScoreBoard.findOne({ where: { user_id: id, quiz_id: quizId } })
       if (data) {
         res.status(200).json({ message: 'Found', data })
